@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitação inválida | MERCON</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="auth-page">
+<main class="auth-wrap">
+    <section class="form-card auth-card">
+        <span class="eyebrow">MERCON CONTABILIDADE</span>
+        <h1>Não foi possível processar</h1>
+        <p class="muted">{{ mensagem }}</p>
+        <a class="button button-primary button-full button-link" href="/">Voltar ao portal</a>
+    </section>
+</main>
+</body>
+</html>

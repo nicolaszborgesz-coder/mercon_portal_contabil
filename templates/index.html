@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Portal de atendimento digital da MERCON Contabilidade.">
+    <title>Portal do Cliente | MERCON Contabilidade</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<header class="topbar">
+    <a class="brand" href="/">MERCON<span>.</span></a>
+    <span class="topbar-caption">CONTABILIDADE · ATENDIMENTO DIGITAL</span>
+</header>
+
+<main class="client-layout">
+    <section class="intro">
+        <span class="eyebrow">PORTAL DO CLIENTE</span>
+        <h1>Sua contabilidade mais <span>simples e digital.</span></h1>
+        <p class="lead">Envie sua solicitação à equipe MERCON de forma organizada. Nossa equipe poderá consultar as informações e dar continuidade ao atendimento.</p>
+        <div class="feature-list">
+            <div class="feature"><span class="feature-icon">01</span><div><strong>Atendimento organizado</strong><small>Suas solicitações ficam registradas.</small></div></div>
+            <div class="feature"><span class="feature-icon">02</span><div><strong>Comunicação centralizada</strong><small>Informe os detalhes do que precisa.</small></div></div>
+            <div class="feature"><span class="feature-icon">03</span><div><strong>Acompanhamento interno</strong><small>A equipe pode atualizar o status do atendimento.</small></div></div>
+        </div>
+    </section>
+
+    <section class="form-card">
+        <div class="card-heading">
+            <span class="eyebrow">FALE COM A NOSSA EQUIPE</span>
+            <h2>Nova solicitação</h2>
+            <p>Preencha os campos para registrar seu atendimento.</p>
+        </div>
+
+        {% with mensagens = get_flashed_messages(with_categories=true) %}
+            {% for categoria, mensagem in mensagens %}
+                <div class="alert alert-{{ categoria }}" role="status">{{ mensagem }}</div>
+            {% endfor %}
+        {% endwith %}
+
+        <form method="POST" action="{{ url_for('cadastrar') }}">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+            <label for="nome">Nome completo</label>
+            <input id="nome" name="nome" type="text" placeholder="Digite seu nome completo" minlength="3" maxlength="120" autocomplete="name" required>
+
+            <label for="email">E-mail</label>
+            <input id="email" name="email" type="email" placeholder="voce@empresa.com.br" maxlength="150" autocomplete="email" required>
+
+            <label for="solicitacao">Como podemos ajudar?</label>
+            <textarea id="solicitacao" name="solicitacao" rows="5" maxlength="2000" placeholder="Descreva brevemente sua solicitação..." required></textarea>
+
+            <button class="button button-primary button-full" type="submit">Enviar solicitação <span aria-hidden="true">→</span></button>
+        </form>
+        <p class="privacy-note"><span aria-hidden="true">●</span> Protótipo demonstrativo. Não envie CPF, documentos, dados bancários ou informações sigilosas nesta versão.</p>
+    </section>
+</main>
+
+<footer class="footer">
+    <span>© 2026 MERCON Contabilidade</span>
+    <a href="{{ url_for('login') }}">Acesso administrativo</a>
+</footer>
+</body>
+</html>

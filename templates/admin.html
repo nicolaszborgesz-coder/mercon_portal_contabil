@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel administrativo | MERCON</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .request-item {
+            align-items: flex-start !important;
+        }
+        .request-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            min-width: 160px;
+            align-self: flex-start;
+        }
+        .request-actions form {
+            margin: 0;
+        }
+        .btn-excluir {
+            width: 100%;
+            background: #ff4444;
+            color: white;
+            border: none;
+            padding: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+<header class="topbar">
+    <a class="brand" href="/">MERCON<span>.</span></a>
+    <div class="topbar-actions"><span class="topbar-caption">PAINEL ADMINISTRATIVO</span>
+        <form method="POST" action="{{ url_for('sair') }}">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+            <button class="button button-ghost button-small" type="submit">Sair</button>
+        </form>
+    </div>
+</header>
+
+<main class="admin-layout">
+    <div class="page-heading">
+        <div><span class="eyebrow">VISÃO GERAL</span><h1>Solicitações recebidas</h1><p class="muted">Gerencie os registros enviados pelo portal do cliente.</p></div>
+        <span class="status-pill">● Área autenticada</span>
+    </div>
+
+    {% with mensagens = get_flashed_messages(with_categories=true) %}
+        {% for categoria, mensagem in mensagens %}
+            <div class="alert alert-{{ categoria }}" role="status">{{ mensagem }}</div>
+        {% endfor %}
+    {% endwith %}
+
+    <section class="stats-grid">
+        <article class="stat-card"><span>Total de solicitações</span><strong>{{ clientes|length }}</strong></article>
+        <article class="stat-card"><span>Novas</span><strong>{{ clientes|selectattr('status', 'equalto', 'Nova')|list|length }}</strong></article>
+        <article class="stat-card"><span>Concluídas</span><strong>{{ clientes|selectattr('status', 'equalto', 'Concluída')|list|length }}</strong></article>
+    </section>
+
+    <section class="table-card">
+        <div class="section-heading"><div><h2>Caixa de entrada</h2><p>As solicitações mais recentes aparecem primeiro.</p></div></div>
+        {% if clientes %}
+            <div class="request-list">
+                {% for cliente in clientes %}
+                    <article class="request-item">
+                        <div class="request-main">
+                            <div class="request-title-row"><h3>{{ cliente.nome }}</h3><span class="request-id">#{{ cliente.id }}</span></div>
+                            <a class="email-link" href="mailto:{{ cliente.email }}">{{ cliente.email }}</a>
+                            <p class="request-message">{{ cliente.solicitacao }}</p>
+                            <small class="date-label">Recebida em {{ cliente.criada_em }}</small>
+                        </div>
+                        <div class="request-actions">
+                            <form class="status-form" method="POST" action="{{ url_for('atualizar_status', cliente_id=cliente.id) }}">
+                                <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+                                <label for="status-{{ cliente.id }}">Status</label>
+                                <select id="status-{{ cliente.id }}" name="status">
+                                    {% for opcao in ['Nova', 'Em análise', 'Concluída'] %}
+                                        <option value="{{ opcao }}" {% if cliente.status == opcao %}selected{% endif %}>{{ opcao }}</option>
+                                    {% endfor %}
+                                </select>
+                                <button class="button button-secondary button-small" type="submit">Atualizar</button>
+                            </form>
+                            <form method="POST" action="{{ url_for('excluir', cliente_id=cliente.id) }}" onsubmit="return confirm('Tem certeza que quer excluir {{ cliente.nome }}?')">
+                                <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+                                <button type="submit" class="btn-excluir">🗑️ Excluir</button>
+                            </form>
+                        </div>
+                    </article>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state"><span>▤</span><h3>Nenhuma solicitação por enquanto</h3><p>Quando um cliente preencher o formulário, o registro aparecerá aqui.</p></div>
+        {% endif %}
+    </section>
+</main>
+<footer class="footer"><span>MERCON Contabilidade · Painel interno</span><a href="/">Ver portal do cliente</a></footer>
+</body>
+</html>
