@@ -73,6 +73,17 @@ mercon_portal_contabil/
 
 O banco SQLite será criado automaticamente em `instance/portal.db`. Os registros permanecem salvos após reiniciar o servidor.
 
+## 🖼️ Como ficou o projeto
+
+### Tela inicial - Portal do Cliente
+![Tela Inicial](inicial.jpeg)
+
+### Login Administrativo
+![Login](login.jpeg)
+
+### Painel Administrativo
+![Painel Admin](admin.jpeg)
+
 ## Observações de segurança
 
 Este repositório é um protótipo para estudo e portfólio, não um sistema pronto para receber documentos ou dados contábeis reais. Não envie CPF, documentos pessoais, dados bancários, folha de pagamento ou informações sigilosas.
